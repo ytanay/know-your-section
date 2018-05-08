@@ -62,14 +62,16 @@ body {
   </head>
 
   <body class="text-center">
+
     <form class="form-signin" method="post">
-      
+        {{ form.hidden_tag() }}
+
       <h1 class="h3 mb-3 font-weight-normal">מי מכיר את המדור?</h1>
       <label for="name" class="sr-only">שם</label>
       <input type="text" id="name" name="name" class="form-control" placeholder="לא לפסטן בבקשה" required autofocus>
         <br>
         <div class="form-check">
-          <input class="form-check-input" type="radio" name="team" id="team-a" value="team-b" checked>
+          <input class="form-check-input" type="radio" name="team" id="team-a" value="team-a" checked>
           <label class="form-check-label" for="team-a">
             קבוצה א׳
           </label>
@@ -84,6 +86,7 @@ body {
       <button class="btn btn-lg btn-primary btn-block" type="submit">בוא נתחיל!</button>
         <br>
       <p class="mt-5 mb-3 text-muted">The GUI Guys Of 371 &copy;</p>
+        <p>{{form.errors|tojson}}</p>
     </form>
   </body>
 </html>

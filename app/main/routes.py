@@ -25,6 +25,7 @@ def index():
         session['team'] = form.team.data
         return redirect(url_for('.game'))
 
+    print(form.errors)
     return render_template('index.html', form=form)
 
 

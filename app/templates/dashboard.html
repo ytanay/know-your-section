@@ -1,0 +1,102 @@
+<html>
+<head>
+    <title>Flask-SocketIO-Chat</title>
+</head>
+<body>
+    <h1>Team A</h1>
+    <ul id="team-a-list">
+
+    </ul>
+    <h1>Team B</h1>
+    <ul id="team-b-list">
+
+    </ul>
+
+    <input placeholder="Player" id="player">
+    <input placeholder="Computer" id="computer">
+    <input placeholder="Human" id="human">
+    <input value="60" id="duration">
+    <a href="#" id="start-game">Start game!</a>
+
+    <a href="#" id="end-game">End game!</a>
+    <span id="countdown">Waiting for game...</span>
+
+    <script type="text/javascript" src="//code.jquery.com/jquery-latest.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.countdown/2.2.0/jquery.countdown.min.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+
+    <script>
+
+
+           var socket = io.connect('http://' + document.domain + ':' + location.port + '/admin');
+
+            socket.on('connect', function(data){
+                console.log('Connected!');
+                socket.emit('player-state');
+
+            })
+
+            socket.on('player-state', function(data){
+            console.log(data)
+                var teams = {
+                    'team-a': [],
+                    'team-b': []
+                };
+                data.players.forEach(function(player){
+                    teams[player.team].push(player);
+                });
+                console.log(teams)
+                renderPlayerList($('#team-a-list'), teams['team-a']);
+                renderPlayerList($('#team-b-list'), teams['team-b']);
+
+            })
+
+            function renderPlayerList($elem, players){
+                $elem.html('');
+                players.forEach(function(player){
+                    $elem.append(`<li>${player.name} ${player.score}</li>`)
+                });
+
+            }
+
+
+            $('#start-game').click(function(){
+                if(isNaN($('#duration').val()))
+                    return alert('Invalid duration');
+                var duration = parseInt($('#duration').val(), 10)
+                var computer = $('#computer').val(), human = $('#human').val(), player = $('#player').val();
+                socket.emit('start-game', {
+                    'player-name': player,
+                    'human-name': human,
+                    'computer-name': computer,
+                    'duration': duration,
+                 });
+
+            });
+
+            socket.on('start-game', function(evt){
+                if(evt === 'Invalid players')
+                    return console.error(evt);
+
+                console.log(evt);
+                $("#countdown")
+                  .countdown(Date.now() + evt.duration * 1000, function(event) {
+                    $(this).text(
+                      event.strftime('%H:%M:%S')
+                    );
+                  }).on('finish.countdown', function(e){
+                    endGame();
+                  });
+            })
+
+            $('#end-game').click(endGame);
+
+            function endGame(){
+                $('#countdown').countdown('stop');
+                socket.emit('end-game', {});
+            }
+
+
+    </script>
+</body>
+</html>

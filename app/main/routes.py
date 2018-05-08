@@ -23,7 +23,7 @@ def index():
     form = LoginForm()
 
     valid = form.validate_on_submit()
-    name = form.name.data.strip().capitalize()
+    name = valid and form.name.data.strip().capitalize()
     already_registered = valid and name in CONNECTED_CLIENTS
 
     if valid and not already_registered:

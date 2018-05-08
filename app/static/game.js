@@ -48,9 +48,9 @@ socket.on('end-game', function(message){
     $('#chat-input').hide();
     $('#game-end-message').show();
     $("#countdown").countdown('stop');
+    $('#vote,#vote-cta').toggle(message['voting-team'] === MY_TEAM);
 
-    if(message['voting-team'] === MY_TEAM)
-        $('#vote').show();
+
 
 })
 

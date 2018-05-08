@@ -45,8 +45,8 @@ def disconnected():
 
     CONNECTED_CLIENTS.pop(session['name'])
 
-    if CURRENT_GAME and session['name'] in CURRENT_GAME.players:   # TODO: test this
-        end_game()
+    if CURRENT_GAME and CURRENT_GAME.active and session['name'] in CURRENT_GAME.players:   # TODO: test this
+        print('Oh no, player has disconnected')
 
     emit('player-state', serialized_clients(), room='admin', namespace='/admin')
 

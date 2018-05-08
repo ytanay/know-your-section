@@ -101,6 +101,7 @@ def end_game(params):
     emit('end-game', {
         'voting-team': CURRENT_GAME.voting_team
     }, room=ROOM_NAME, namespace='/game')
+    CURRENT_GAME.end_game()
 
 
 @socketio.on('vote', namespace='/game')

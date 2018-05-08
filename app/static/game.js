@@ -9,6 +9,7 @@ socket.on('start-game', function(data){
     $('.mCSB_container').html('');
     $('#game-end-message').hide();
     $('#vote').hide();
+    $('#vote-actual').hide();
 
     $('#player-name').text(data['player-name']);
     $('#human-name').text(data['human-name']);
@@ -80,6 +81,13 @@ $(function(){
     });
 });
 
+
+socket.on('vote-result', function(data){
+    $('#vote').hide();
+    $('#correct-answer').text(data['answer'])
+    $('#vote-actual').show();
+
+})
 
 
 

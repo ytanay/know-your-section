@@ -86,7 +86,13 @@ body {
       <button class="btn btn-lg btn-primary btn-block" type="submit">בוא נתחיל!</button>
         <br>
       <p class="mt-5 mb-3 text-muted">The GUI Guys Of 371 &copy;</p>
+        {% if form.errors %}
         <p>{{form.errors|tojson}}</p>
+        {% endif %}
+
+        {% if already_registered %}
+        <p>אופס, השם כבר תפוס!</p>
+        {% endif %}
     </form>
   </body>
 </html>

@@ -1,6 +1,8 @@
 from functools import wraps
 
 from flask import session, redirect, url_for, render_template, request
+
+from app.main.state import CONNECTED_CLIENTS
 from . import main
 from .forms import LoginForm
 
@@ -20,13 +22,15 @@ def index():
     """Login form to enter a room."""
     form = LoginForm()
 
-    if form.validate_on_submit():
+    valid = form.validate_on_submit()
+    already_registered = valid and form.name.data.capitalize() in CONNECTED_CLIENTS
+
+    if valid and not already_registered:
         session['name'] = form.name.data.capitalize()
         session['team'] = form.team.data
         return redirect(url_for('.game'))
 
-    print(form.errors)
-    return render_template('index.html', form=form)
+    return render_template('index.html', form=form, already_registered=already_registered)
 
 
 @main.route('/dashboard')

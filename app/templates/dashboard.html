@@ -19,6 +19,7 @@
     <a href="#" id="start-game">Start game!</a>
 
     <a href="#" id="end-game">End game!</a>
+    <a href="#" id="publish-result">Publish result</a>
     <span id="countdown">Waiting for game...</span>
 
     <script type="text/javascript" src="//code.jquery.com/jquery-latest.min.js"></script>
@@ -75,7 +76,7 @@
             });
 
             socket.on('start-game', function(evt){
-                if(evt === 'Invalid players')
+                if(!evt.duration)
                     return console.error(evt);
 
                 console.log(evt);
@@ -95,6 +96,10 @@
                 $('#countdown').countdown('stop');
                 socket.emit('end-game', {});
             }
+
+            $("#publish-result").click(function(e){
+                socket.emit('vote-result');
+            });
 
 
     </script>

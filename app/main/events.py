@@ -2,10 +2,10 @@ from flask import session
 from flask_socketio import emit, join_room, send
 
 from app.main.game import Game
+from app.main.state import CONNECTED_CLIENTS
 from .. import socketio
 
 ROOM_NAME = 'global-room'
-CONNECTED_CLIENTS = {}
 CURRENT_GAME = None
 
 
@@ -119,7 +119,6 @@ def vote(vote):
     emit('player-state', serialized_clients(), room='admin', namespace='/admin')
 
 
-
 @socketio.on('message', namespace='/game')
 def message(message):
     """Sent by a client when the user entered a new message.
@@ -131,3 +130,9 @@ def message(message):
     }, room=ROOM_NAME)
 
 
+@socketio.on('vote-result', namespace='/admin')
+def vote_result():
+    print('Publishing!')
+    emit('vote-result', {
+        'answer': CURRENT_GAME.computer
+    }, room=ROOM_NAME, namespace='/game')

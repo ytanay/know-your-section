@@ -23,10 +23,11 @@ def index():
     form = LoginForm()
 
     valid = form.validate_on_submit()
-    already_registered = valid and form.name.data.capitalize() in CONNECTED_CLIENTS
+    name = form.name.data.strip().capitalize()
+    already_registered = valid and name in CONNECTED_CLIENTS
 
     if valid and not already_registered:
-        session['name'] = form.name.data.capitalize()
+        session['name'] = name
         session['team'] = form.team.data
         return redirect(url_for('.game'))
 

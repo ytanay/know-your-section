@@ -26,7 +26,7 @@ def index():
     name = valid and form.name.data.strip().capitalize()
     already_registered = valid and name in CONNECTED_CLIENTS
 
-    if valid and not already_registered:
+    if valid and not already_registered and '<' not in name and form.team.data in ('team-a', 'team-b'):
         session['name'] = name
         session['team'] = form.team.data
         return redirect(url_for('.game'))

@@ -1,8 +1,8 @@
 from functools import wraps
 
-from flask import session, redirect, url_for, render_template, request
+from flask import session, redirect, url_for, render_template, request, jsonify
 
-from app.main.state import CONNECTED_CLIENTS
+from app.main.state import CONNECTED_CLIENTS, CHATS
 from . import main
 from .forms import LoginForm
 
@@ -37,6 +37,11 @@ def index():
 @main.route('/dashboard')
 def dashboard():
     return render_template('dashboard.html')
+
+
+@main.route('/history')
+def history():
+    return jsonify(CHATS)
 
 
 @main.route('/chat')

@@ -2,7 +2,7 @@ from flask import session
 from flask_socketio import emit, join_room, send
 
 from app.main.game import Game
-from app.main.state import CONNECTED_CLIENTS
+from app.main.state import CONNECTED_CLIENTS, CHATS
 from .. import socketio
 
 ROOM_NAME = 'global-room'
@@ -19,6 +19,7 @@ CURRENT_GAME = None
 # TODO: prefill names
 
 
+
 class Player:
     def __init__(self, name, team, score=0):
         self.name, self.team, self.score = name, team, score
@@ -33,6 +34,7 @@ def serialized_clients():
 
 @socketio.on('connect', namespace='/game')
 def game_connection():
+    print(f'Got connection from {session["name"]}')
     join_room(ROOM_NAME)
     join_room(session['name'])
     CONNECTED_CLIENTS[session['name']] = Player(session['name'], session['team'])
@@ -60,7 +62,10 @@ def get_state():
 @socketio.on('start-game', namespace='/admin')
 def start_game(params):
 
+    print(f'Starting game from {params}')
     global CURRENT_GAME
+
+    CHATS.append([])
 
     player_name, computer_name, human_name = params['player-name'].capitalize(), params['computer-name'].capitalize(), params['human-name'].capitalize()
     players = {player_name, computer_name, human_name}
@@ -123,6 +128,12 @@ def vote(vote):
 def message(message):
     """Sent by a client when the user entered a new message.
     The message is sent to all people in the room."""
+    print(f'{session["name"]}: {message}')
+    CHATS[-1].append({
+        "from": session['name'],
+        "team": session['team'],
+        'contents': message
+    })
     emit('message', {
         'from': CURRENT_GAME.player if session['name'] == CURRENT_GAME.player else CURRENT_GAME.human,
         'contents': message,

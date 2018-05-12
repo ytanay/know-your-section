@@ -1,10 +1,9 @@
-Flask-SocketIO-Chat
-===================
+know-your-section
+=================
 
-A simple chat application that demonstrates how to structure a Flask-SocketIO application.
+The goal: figuring out how well we know each other.
 
-To run this application install the requirements in a virtual environment, run `python chat.py` and visit `http://localhost:5000` on one or more browser tabs.
+What actually happened: HH-ing of the format.
 
-If you prefer, you can also start the server using the Flask cli:
 
-    $ FLASK_APP=chat.py flask run
+(Boilerplate from Flask-SocketIO-Chat)
